@@ -49,7 +49,7 @@
         <div class="topbar">
           <div>
             <h1>Dashboard</h1>
-            <p>Welcome back, Danish! 👋</p>
+            <p id="welcome-msg">Welcome back! 👋</p>
           </div>
           <button class="btn-add" onclick="showAddModal()">+ Add Website</button>
         </div>
@@ -176,15 +176,74 @@
     </div>
 
     <script>
-      function showAddModal() {
-        document.getElementById('modal').style.display = 'flex';
+      <script>
+      const userName = localStorage.getItem('user_name');
+      if (userName) {
+        document.getElementById('welcome-msg').textContent = 'Welcome back, ' + userName + '! 👋';
       }
 
-      function hideAddModal() {
-        document.getElementById('modal').style.display = 'none';
+      async function loadMonitors() {
+        try {
+          const response = await fetch('http://127.0.0.1:5000/api/monitors', {
+            credentials: 'include'
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            renderMonitors(data.monitors);
+          } else {
+            console.log('Not logged in');
+          }
+        } catch (error) {
+          console.log('Server not running');
+        }
       }
 
-      function addWebsite() {
+      function renderMonitors(monitors) {
+        const table = document.querySelector('.monitors-table');
+        const header = document.querySelector('.table-header');
+
+        table.innerHTML = '';
+        table.appendChild(header);
+
+        if (monitors.length === 0) {
+          table.innerHTML += '<p style="padding: 30px; color: #64748b; text-align: center;">No monitors yet. Add your first website!</p>';
+          return;
+        }
+
+        monitors.forEach(monitor => {
+          const row = document.createElement('div');
+          row.className = 'table-row';
+          row.innerHTML = `
+            <div class="site-info">
+              <div class="site-favicon">🌐</div>
+              <div>
+                <p class="site-name">${monitor.name}</p>
+                <p class="site-url">${monitor.url}</p>
+              </div>
+            </div>
+            <span class="status-badge ${monitor.status === 'up' ? 'up' : 'down'}">
+              ● ${monitor.status.toUpperCase()}
+            </span>
+            <span class="uptime-percent">${monitor.uptime_percent}%</span>
+            <span class="last-checked">Just added</span>
+            <div class="action-btns">
+              <button class="btn-view" onclick="viewMonitor(${monitor.id})">View</button>
+              <button class="btn-delete" onclick="deleteMonitor(${monitor.id})">Delete</button>
+            </div>
+          `;
+          table.appendChild(row);
+        });
+
+        document.querySelector('.stat-card:nth-child(1) h3').textContent = monitors.length;
+        const upCount = monitors.filter(m => m.status === 'up').length;
+        const downCount = monitors.filter(m => m.status === 'down').length;
+        document.querySelector('.stat-card:nth-child(2) h3').textContent = upCount;
+        document.querySelector('.stat-card:nth-child(3) h3').textContent = downCount;
+      }
+
+      async function addWebsite() {
         const name = document.getElementById('site-name').value;
         const url = document.getElementById('site-url').value;
 
@@ -198,9 +257,71 @@
           return;
         }
 
-        alert('Website added successfully! We will start monitoring ' + name);
-        hideAddModal();
+        try {
+          const response = await fetch('http://127.0.0.1:5000/api/monitors', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              name: name,
+              url: url
+            })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert('Website added successfully!');
+            hideAddModal();
+            document.getElementById('site-name').value = '';
+            document.getElementById('site-url').value = '';
+            loadMonitors();
+          } else {
+            alert('Error: ' + data.error);
+          }
+        } catch (error) {
+          alert('Could not connect to server!');
+        }
       }
+
+      async function deleteMonitor(id) {
+        if (!confirm('Are you sure you want to delete this monitor?')) return;
+
+        try {
+          const response = await fetch('http://127.0.0.1:5000/api/monitors/' + id, {
+            method: 'DELETE',
+            credentials: 'include'
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert('Monitor deleted!');
+            loadMonitors();
+          } else {
+            alert('Error: ' + data.error);
+          }
+        } catch (error) {
+          alert('Could not connect to server!');
+        }
+      }
+
+      function viewMonitor(id) {
+        alert('Monitor details coming soon!');
+      }
+
+      function showAddModal() {
+        document.getElementById('modal').style.display = 'flex';
+      }
+
+      function hideAddModal() {
+        document.getElementById('modal').style.display = 'none';
+      }
+
+      loadMonitors();
+</script>
     </script>
 
   </body>

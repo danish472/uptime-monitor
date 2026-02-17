@@ -47,7 +47,7 @@
     </section>
 
     <script>
-      function handleLogin() {
+      async function handleLogin() {
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
@@ -61,13 +61,40 @@
           return;
         }
 
-        if (password.length < 8) {
-          alert('Password must be at least 8 characters!');
-          return;
-        }
+        const btn = document.querySelector('.btn-submit');
+        btn.textContent = 'Logging in...';
+        btn.disabled = true;
 
-        alert('Login successful! Welcome back!');
-        window.location.href = 'dashboard.html';
+        try {
+          const response = await fetch('http://127.0.0.1:5000/api/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              email: email,
+              password: password
+            })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            localStorage.setItem('user_name', data.user.name);
+            localStorage.setItem('user_id', data.user.id);
+            window.location.href = 'dashboard.html';
+          } else {
+            alert('Error: ' + data.error);
+            btn.textContent = 'Login';
+            btn.disabled = false;
+          }
+
+        } catch (error) {
+          alert('Could not connect to server. Make sure the backend is running!');
+          btn.textContent = 'Login';
+          btn.disabled = false;
+        }
       }
     </script>
 
