@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - UptimeGuard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+  </head>
+  <body>
+
+    <div class="dashboard-layout">
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-logo">UptimeGuard</div>
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" class="nav-item active">
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="nav-icon">🌐</span>
+            <span>Monitors</span>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="nav-icon">🔔</span>
+            <span>Alerts</span>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="nav-icon">📈</span>
+            <span>Reports</span>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="nav-icon">⚙️</span>
+            <span>Settings</span>
+          </a>
+        </nav>
+        <a href="login.html" class="nav-item logout">
+          <span class="nav-icon">🚪</span>
+          <span>Logout</span>
+        </a>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="dashboard-main">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+          <div>
+            <h1>Dashboard</h1>
+            <p>Welcome back, Danish! 👋</p>
+          </div>
+          <button class="btn-add" onclick="showAddModal()">+ Add Website</button>
+        </div>
+
+        <!-- STATS CARDS -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">🌐</div>
+            <div class="stat-info">
+              <h3>3</h3>
+              <p>Total Monitors</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-info">
+              <h3>2</h3>
+              <p>Sites Up</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">❌</div>
+            <div class="stat-info">
+              <h3>1</h3>
+              <p>Sites Down</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-info">
+              <h3>98.5%</h3>
+              <p>Avg Uptime</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- MONITORS TABLE -->
+        <div class="monitors-section">
+          <h2>Your Monitors</h2>
+          <div class="monitors-table">
+            <div class="table-header">
+              <span>Website</span>
+              <span>Status</span>
+              <span>Uptime</span>
+              <span>Last Checked</span>
+              <span>Actions</span>
+            </div>
+
+            <div class="table-row">
+              <div class="site-info">
+                <div class="site-favicon">🌐</div>
+                <div>
+                  <p class="site-name">My Portfolio</p>
+                  <p class="site-url">https://danish.dev</p>
+                </div>
+              </div>
+              <span class="status-badge up">● UP</span>
+              <span class="uptime-percent">99.9%</span>
+              <span class="last-checked">2 mins ago</span>
+              <div class="action-btns">
+                <button class="btn-view">View</button>
+                <button class="btn-delete">Delete</button>
+              </div>
+            </div>
+
+            <div class="table-row">
+              <div class="site-info">
+                <div class="site-favicon">🛒</div>
+                <div>
+                  <p class="site-name">My Store</p>
+                  <p class="site-url">https://mystore.pk</p>
+                </div>
+              </div>
+              <span class="status-badge up">● UP</span>
+              <span class="uptime-percent">98.2%</span>
+              <span class="last-checked">5 mins ago</span>
+              <div class="action-btns">
+                <button class="btn-view">View</button>
+                <button class="btn-delete">Delete</button>
+              </div>
+            </div>
+
+            <div class="table-row">
+              <div class="site-info">
+                <div class="site-favicon">📝</div>
+                <div>
+                  <p class="site-name">My Blog</p>
+                  <p class="site-url">https://myblog.com</p>
+                </div>
+              </div>
+              <span class="status-badge down">● DOWN</span>
+              <span class="uptime-percent">97.1%</span>
+              <span class="last-checked">1 min ago</span>
+              <div class="action-btns">
+                <button class="btn-view">View</button>
+                <button class="btn-delete">Delete</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </main>
+    </div>
+
+    <!-- ADD WEBSITE MODAL -->
+    <div class="modal-overlay" id="modal" onclick="hideAddModal()">
+      <div class="modal-card" onclick="event.stopPropagation()">
+        <h3>Add New Website</h3>
+        <p>Enter the URL of the website you want to monitor</p>
+        <div class="form-group">
+          <label for="site-name">Website Name</label>
+          <input type="text" id="site-name" placeholder="My Website">
+        </div>
+        <div class="form-group">
+          <label for="site-url">Website URL</label>
+          <input type="url" id="site-url" placeholder="https://example.com">
+        </div>
+        <div class="modal-btns">
+          <button class="btn-cancel" onclick="hideAddModal()">Cancel</button>
+          <button class="btn-submit" onclick="addWebsite()">Add Monitor</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function showAddModal() {
+        document.getElementById('modal').style.display = 'flex';
+      }
+
+      function hideAddModal() {
+        document.getElementById('modal').style.display = 'none';
+      }
+
+      function addWebsite() {
+        const name = document.getElementById('site-name').value;
+        const url = document.getElementById('site-url').value;
+
+        if (name === '' || url === '') {
+          alert('Please fill in all fields!');
+          return;
+        }
+
+        if (!url.startsWith('https://') && !url.startsWith('http://')) {
+          alert('Please enter a valid URL starting with https://');
+          return;
+        }
+
+        alert('Website added successfully! We will start monitoring ' + name);
+        hideAddModal();
+      }
+    </script>
+
+  </body>
+</html>
