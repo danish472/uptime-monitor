@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - UptimeGuard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+  </head>
+  <body>
+
+    <nav>
+      <div class="logo">UptimeGuard</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+      </div>
+    </nav>
+
+    <section class="auth-section">
+      <div class="auth-card">
+
+        <div class="auth-header">
+          <h2>Create your account</h2>
+          <p>Start monitoring your websites for free</p>
+        </div>
+
+        <div class="auth-form">
+
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="Danish Muzafar">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="danish@gmail.com">
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Min 8 characters">
+          </div>
+
+          <div class="form-group">
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" id="confirm-password" placeholder="Repeat your password">
+          </div>
+
+          <button class="btn-submit" onclick="handleSignup()">Create Account</button>
+
+          <p class="auth-switch">Already have an account? <a href="login.html">Login here</a></p>
+
+        </div>
+      </div>
+    </section>
+
+    <script>
+      function handleSignup() {
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+
+        if (name === '' || email === '' || password === '' || confirmPassword === '') {
+          alert('Please fill in all fields!');
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          alert('Passwords do not match!');
+          return;
+        }
+
+        if (password.length < 8) {
+          alert('Password must be at least 8 characters!');
+          return;
+        }
+
+        alert('Account created successfully! Welcome ' + name + '!');
+      }
+    </script>
+
+  </body>
+</html>
